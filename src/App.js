@@ -5,7 +5,7 @@ import './App.css';
 
 export default function App() {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [totalWaves, setTotalWaves] = useState(0);
+  const [totalWaves, setTotalWaves] = useState("Couldn't retrieve");
   const [mining, setMining] = useState(false);
 
   const contractAddress  = "0xbB072bFdb2b3D0eA203238879De43437eC98A63b";
@@ -48,6 +48,7 @@ export default function App() {
       const accounts = await ethereum.request({ method: "eth_requestAccounts"});
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
+      getTotalWaves();
     } catch (error) {
       console.log(error)
     }
