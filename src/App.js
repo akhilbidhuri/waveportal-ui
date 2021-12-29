@@ -1,4 +1,4 @@
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import React, {useState, useEffect} from "react";
 import abi from './utils/waveportal.json'
 import './App.css';
@@ -12,7 +12,7 @@ export default function App() {
   const [enterMessage, setEnterMessage] = useState(false);
   const [messageAlert, setMessageAlert] = useState(false);
 
-  const contractAddress  = "0x290F2BAAd154295f574c7c3EDcfe2393FceC733B";
+  const contractAddress  = "0x84d2C825cB8BE8a9dd4FECb36B0CE4b817906633";
   const contractABI = abi.abi;
 
   const checkIFWalletIsConnected = async () => {
