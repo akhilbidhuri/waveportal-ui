@@ -48,7 +48,6 @@ export default function App() {
         alert("Get Metamask!");
         return;
       }
-
       const accounts = await ethereum.request({ method: "eth_requestAccounts"});
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
@@ -84,6 +83,33 @@ export default function App() {
     getAllWaves();
   }, [])
 
+  // To get automatic updates on waves from other clients
+  useEffect(()=>{
+    let wavePortalContract;
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+      setAllWaves(prevState => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(timestamp.toNumber() *1000),
+          message: message
+        }
+      ])
+    }
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract.on("NewWave", onNewWave);
+    }
+    return ()=>{
+      if (wavePortalContract) {
+        wavePortalContract.off("NewWave", onNewWave)
+      }
+    }
+  }, [])
+
   const wave = async () => {
     setEnterMessage(true);
     if(message.length===0) {
@@ -108,15 +134,16 @@ export default function App() {
         setEnterMessage(false);
         await waveTxn.wait();
         console.log("Mined -- ", waveTxn.hash);
-        setMining(false);
         getTotalWaves();
-        getAllWaves();
+        //getAllWaves();
       } else {
         console.log("Ethereum object dosen't exist!");
       }
     } catch (error) {
       console.log(error)
+      alert("Failed to wave :(")
     }
+    setMining(false);
     setMessage("");
     setEnterMessage(false);
   }
