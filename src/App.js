@@ -88,11 +88,11 @@ export default function App() {
     let wavePortalContract;
     const onNewWave = (from, timestamp, message) => {
       console.log("NewWave", from, timestamp, message);
-      setAllWaves(prevState => [
+      setAllWaves(prevState=>[
         ...prevState,
         {
           address: from,
-          timestamp: new Date(timestamp.toNumber() *1000),
+          timestamp: new Date(timestamp.toNumber() *1000).toString(),
           message: message
         }
       ])
